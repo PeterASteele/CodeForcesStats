@@ -16,7 +16,7 @@ pattern = re.compile('div\.?\s*(\d)', re.IGNORECASE)
 def get_division(contest_name):
     match = pattern.search(contest_name)
     if match:
-        return match.group(1)
+        return int(match.group(1))
     else:
         return 2
 
@@ -28,16 +28,23 @@ def get_division(contest_name):
 # print('Codeforces Round #355 (div. 1)' + ' ' + get_division('Codeforces Round #355 (div. 1)'))
 # print('Codeforces Round #356 (div. 2)' + ' ' + get_division('Codeforces Round #356 (div. 2)'))
 
+contest_id_to_div = {}
+contest_list = json.loads(str(urllib2.urlopen(urllib2.Request('http://codeforces.com/api/contest.list?gym=false')).read().decode("utf-8")))['result']
+for contest in contest_list:
+    division = get_division(contest['name'])
+    contest_id_to_div[contest['id']] = division
+
+# print(contest_id_to_div)
 
 HANDLES = ["pho", "ChrisWu", "PeterASteele", "godmar", "richard_xu", "intrepidcoder", "espeon", "tourist"]
 MAX = "100000"
-    
+
 if __name__ == '__main__':
     for handle in HANDLES:
         try:
             request = urllib2.Request('http://codeforces.com/api/user.status?handle=' + handle + '&from=1&count=' + MAX)
             response = urllib2.urlopen(request)
-            response_json = response.read();
+            response_json = response.read()
             response_json = str(response_json.decode("utf-8"))
             parsed_response = json.loads(response_json)
             ok = 0
