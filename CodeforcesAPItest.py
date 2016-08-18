@@ -10,7 +10,7 @@ except ImportError:
 import sys
 import ast
 import json
-HANDLES = ["pho", "ChrisWu", "PeterASteele", "godmar", "richard_xu", "espeon", "tourist"]
+HANDLES = ["pho", "ChrisWu", "PeterASteele", "godmar", "richard_xu", "intrepidcoder", "espeon", "tourist"]
 MAX = "100000"
     
 if __name__ == '__main__':
@@ -26,6 +26,8 @@ if __name__ == '__main__':
             ProblemLetter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U']
             goodArr = {}
             badArr = {}
+            goodTags = {}
+            badTags = {}
             for i in ProblemLetter:
                 goodArr[i] = 0
                 badArr[i] = 0
@@ -35,9 +37,21 @@ if __name__ == '__main__':
                         if i['testset'] == "TESTS" or i['testset'] == "PRETESTS" or i['testset'] == "CHALLENGES":
                             if i['verdict'] == 'OK':
                                 ok = ok + 1
+                                for j in i['problem']['tags']:
+                                    if j in goodTags.keys():
+                                        goodTags[j] += 1
+                                    else:
+                                        goodTags[j] = 1
+                                        badTags[j] = 0
                                 goodArr[i['problem']['index']] += 1
                             elif i['verdict'] == 'CHALLENGED' or i['verdict'] == 'RUNTIME_ERROR' or i['verdict'] == 'WRONG_ANSWER' or i['verdict'] == 'TIME_LIMIT_EXCEEDED' or i['verdict'] == 'MEMORY_LIMIT_EXCEEDED':
                                 bad = bad + 1
+                                for j in i['problem']['tags']:
+                                    if j in badTags.keys():
+                                        badTags[j] += 1
+                                    else:
+                                        badTags[j] = 1
+                                        goodTags[j] = 0
                                 badArr[i['problem']['index']] += 1
 #                         try:
 # #                             print(str(i)) 
@@ -49,9 +63,11 @@ if __name__ == '__main__':
             print(handle + "\t AC: " + str(ok) + " BAD: " + str(bad) + " TOTAL: " + str(ok + bad) + " Correct: " + str(100*ok/(ok+bad)) + "%")
             for i in ProblemLetter:
                 try:
-                    print(handle + "\t Problem " + i + " AC: " + str(goodArr[i]) + " BAD: " + str(badArr[i]) + " TOTAL: " + str(goodArr[i] + badArr[i]) + " Correct: " + str(100*goodArr[i]/(goodArr[i]+badArr[i])) + "%")
+                    print(handle + "\t\t Problem " + i + " -> AC: " + str(goodArr[i]) + " BAD: " + str(badArr[i]) + " TOTAL: " + str(goodArr[i] + badArr[i]) + " Correct: " + str(100*goodArr[i]/(goodArr[i]+badArr[i])) + "%")
                 except:
                     pass
+            for i in badTags.keys():
+                print(handle + "\t\t Tag " + i + " -> AC: " + str(goodTags[i]) + " BAD: " + str(badTags[i]) + " TOTAL: " + str(goodTags[i] + badTags[i]) + " Correct: " + str(100*goodTags[i]/(goodTags[i]+badTags[i])) + "%")
         except:
             e = sys.exc_info()[0]
             print(str(e))
