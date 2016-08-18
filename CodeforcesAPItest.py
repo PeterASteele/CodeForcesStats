@@ -1,7 +1,7 @@
 '''
 Created on Aug 17, 2016
 
-@author: Peter
+@author: Peter and Chris
 '''
 try:
     import urllib.request as urllib2
@@ -29,11 +29,14 @@ def get_division(contest_name):
 # print('Codeforces Round #356 (div. 2)' + ' ' + get_division('Codeforces Round #356 (div. 2)'))
 
 contest_id_to_div = {}
+contest_list = json.loads(str(urllib2.urlopen(urllib2.Request('http://codeforces.com/api/contest.list?gym=true')).read().decode("utf-8")))['result']
+for contest in contest_list:
+    division = get_division(contest['name'])
+    contest_id_to_div[contest['id']] = division
 contest_list = json.loads(str(urllib2.urlopen(urllib2.Request('http://codeforces.com/api/contest.list?gym=false')).read().decode("utf-8")))['result']
 for contest in contest_list:
     division = get_division(contest['name'])
     contest_id_to_div[contest['id']] = division
-
 # print(contest_id_to_div)
 
 HANDLES = ["pho", "ChrisWu", "PeterASteele", "godmar", "richard_xu", "intrepidcoder", "espeon", "tourist"]
@@ -49,7 +52,7 @@ if __name__ == '__main__':
             parsed_response = json.loads(response_json)
             ok = 0
             bad = 0
-            ProblemLetter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U']
+            ProblemLetter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
             goodArr = {}
             badArr = {}
             goodTags = {}
@@ -63,13 +66,14 @@ if __name__ == '__main__':
                         if i['testset'] == "TESTS" or i['testset'] == "PRETESTS" or i['testset'] == "CHALLENGES":
                             if i['verdict'] == 'OK':
                                 ok = ok + 1
+                                
                                 for j in i['problem']['tags']:
                                     if j in goodTags.keys():
                                         goodTags[j] += 1
                                     else:
                                         goodTags[j] = 1
                                         badTags[j] = 0
-                                goodArr[i['problem']['index']] += 1
+                                goodArr[chr(ord(i['problem']['index'])+2-contest_id_to_div[i['contestId']]+2-contest_id_to_div[i['contestId']])] += 1
                             elif i['verdict'] == 'CHALLENGED' or i['verdict'] == 'RUNTIME_ERROR' or i['verdict'] == 'WRONG_ANSWER' or i['verdict'] == 'TIME_LIMIT_EXCEEDED' or i['verdict'] == 'MEMORY_LIMIT_EXCEEDED':
                                 bad = bad + 1
                                 for j in i['problem']['tags']:
@@ -78,7 +82,7 @@ if __name__ == '__main__':
                                     else:
                                         badTags[j] = 1
                                         goodTags[j] = 0
-                                badArr[i['problem']['index']] += 1
+                                badArr[chr(ord(i['problem']['index'])+2-contest_id_to_div[i['contestId']]+2-contest_id_to_div[i['contestId']])] += 1
 #                         try:
 # #                             print(str(i)) 
 #                         except:
