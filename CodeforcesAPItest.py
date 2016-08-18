@@ -10,6 +10,25 @@ except ImportError:
 import sys
 import ast
 import json
+import re
+
+pattern = re.compile('div\.?\s*(\d)', re.IGNORECASE)
+def get_division(contest_name):
+    match = pattern.search(contest_name)
+    if match:
+        return match.group(1)
+    else:
+        return 2
+
+# Can delete this, just testing the regex
+# print('Codeforces Round #360 (Div. 1)' + ' ' + get_division('Codeforces Round #360 (Div. 1)'))
+# print('Codeforces Round #360 (Div. 2)' + ' ' + get_division('Codeforces Round #360 (Div. 2)'))
+# print('VK Cup 2016 - Round 1 (Div.1 Edition)' + ' ' + get_division('VK Cup 2016 - Round 1 (Div.1 Edition)'))
+# print('Codeforces Beta Round #12 (Div 2 Only)' + ' ' + get_division('Codeforces Beta Round #12 (Div 2 Only)'))
+# print('Codeforces Round #355 (div. 1)' + ' ' + get_division('Codeforces Round #355 (div. 1)'))
+# print('Codeforces Round #356 (div. 2)' + ' ' + get_division('Codeforces Round #356 (div. 2)'))
+
+
 HANDLES = ["pho", "ChrisWu", "PeterASteele", "godmar", "richard_xu", "intrepidcoder", "espeon", "tourist"]
 MAX = "100000"
     
