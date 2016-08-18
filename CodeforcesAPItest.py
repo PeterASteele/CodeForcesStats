@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 badArr[i] = 0
             if parsed_response['result'] != []:
                 for i in parsed_response['result']:
-                    if i['author']['participantType'] != "PRACTICE":
+                    if i['author']['participantType'] != "PRACTICE" and i['contestId'] < 10000:
                         if i['testset'] == "TESTS" or i['testset'] == "PRETESTS" or i['testset'] == "CHALLENGES":
                             if i['verdict'] == 'OK':
                                 ok = ok + 1
