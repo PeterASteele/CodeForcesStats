@@ -12,21 +12,30 @@ import ast
 import json
 import re
 
-pattern = re.compile('div\.?\s*(\d)', re.IGNORECASE)
+pattern1 = re.compile('div\.?\s*1', re.IGNORECASE)
+pattern2 = re.compile('div\.?\s*2', re.IGNORECASE)
 def get_division(contest_name):
-    match = pattern.search(contest_name)
+    match = pattern2.search(contest_name)
     if match:
-        return int(match.group(1))
-    else:
         return 2
+    else:
+        match = pattern1.search(contest_name)
+        if match:
+            return 1
+        else:
+            return 2
 
 # Can delete this, just testing the regex
-# print('Codeforces Round #360 (Div. 1)' + ' ' + get_division('Codeforces Round #360 (Div. 1)'))
-# print('Codeforces Round #360 (Div. 2)' + ' ' + get_division('Codeforces Round #360 (Div. 2)'))
-# print('VK Cup 2016 - Round 1 (Div.1 Edition)' + ' ' + get_division('VK Cup 2016 - Round 1 (Div.1 Edition)'))
-# print('Codeforces Beta Round #12 (Div 2 Only)' + ' ' + get_division('Codeforces Beta Round #12 (Div 2 Only)'))
-# print('Codeforces Round #355 (div. 1)' + ' ' + get_division('Codeforces Round #355 (div. 1)'))
-# print('Codeforces Round #356 (div. 2)' + ' ' + get_division('Codeforces Round #356 (div. 2)'))
+# print('Codeforces Round #360 (Div. 1)' + ' ' + str(get_division('Codeforces Round #360 (Div. 1)')))
+# print('Codeforces Round #360 (Div. 2)' + ' ' + str(get_division('Codeforces Round #360 (Div. 2)')))
+# print('VK Cup 2016 - Round 1 (Div.1 Edition)' + ' ' + str(get_division('VK Cup 2016 - Round 1 (Div.1 Edition)')))
+# print('Codeforces Beta Round #12 (Div 2 Only)' + ' ' + str(get_division('Codeforces Beta Round #12 (Div 2 Only)')))
+# print('Codeforces Round #355 (div. 1)' + ' ' + str(get_division('Codeforces Round #355 (div. 1)')))
+# print('Codeforces Round #356 (div. 2)' + ' ' + str(get_division('Codeforces Round #356 (div. 2)')))
+# print('Hello 2015 (Div.1)' + ' ' + str(get_division('Hello 2015 (Div.1)')))
+# print('Wunder Fund Round 2016 (Div. 1 + Div. 2 combined)' + ' ' + str(get_division('Wunder Fund Round 2016 (Div. 1 + Div. 2 combined)')))
+# print('IndiaHacks 2016 - Online Edition (Div. 1 + Div. 2)' + ' ' + str(get_division('IndiaHacks 2016 - Online Edition (Div. 1 + Div. 2)')))
+
 
 contest_id_to_div = {}
 contest_list = json.loads(str(urllib2.urlopen(urllib2.Request('http://codeforces.com/api/contest.list?gym=true')).read().decode("utf-8")))['result']
@@ -37,7 +46,6 @@ contest_list = json.loads(str(urllib2.urlopen(urllib2.Request('http://codeforces
 for contest in contest_list:
     division = get_division(contest['name'])
     contest_id_to_div[contest['id']] = division
-# print(contest_id_to_div)
 
 HANDLES = ["pho", "ChrisWu", "PeterASteele", "godmar", "richard_xu", "intrepidcoder", "espeon", "tourist"]
 MAX = "100000"
